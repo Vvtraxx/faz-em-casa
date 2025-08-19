@@ -1,11 +1,20 @@
-from flask import Flask
+"""
+Arquivo principal para deploy na Vercel
+"""
+import os
+import sys
+from pathlib import Path
 
-app = Flask(__name__)
+# Adiciona o diretório raiz ao Python path
+root_dir = Path(__file__).parent.parent
+sys.path.insert(0, str(root_dir))
 
-@app.route('/')
-def home():
-    return 'Hello, World!'
+from app import create_app
 
-@app.route('/about')
-def about():
-    return 'About'
+# Cria a aplicação Flask
+app = create_app()
+
+# Para Vercel, a aplicação precisa estar disponível globalmente
+if __name__ == "__main__":
+    app.run()
+    
