@@ -106,7 +106,6 @@ class ApiExternaService:
         return sucesso, resposta
     
     def resetar_senha(self, email_telefone: str, nova_senha_hash: str) -> Tuple[bool, str]:
-    
         dados = {
             "email_telefone": email_telefone,
             "nova_senha": nova_senha_hash
@@ -121,7 +120,7 @@ class ApiExternaService:
             self.logger.error(f"Falha no reset de senha: {erro_msg}")
             return False, erro_msg
         
-        return True, "Senha alterada com sucesso"
+        return True, resposta.get("status", "Senha alterada com sucesso")
 
 
 # Instância global do serviço
