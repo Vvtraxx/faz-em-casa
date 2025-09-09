@@ -153,3 +153,36 @@ def refresh_token():
             'message': 'Erro interno do servidor'
         }), 500
 
+@auth_bp.route('/reset-password', methods=['POST'])
+def reset_password():
+
+
+    try:
+        email_telefone = request.json.get('email_telefone')
+        nova_senha = request.json.get('senha')
+        print(email_telefone, nova_senha)
+        
+        if not email_telefone or not nova_senha:
+            return jsonify({
+                'success': False,
+                'message': 'Email e nova senha são obrigatórios'
+            }), 400
+        
+        # Cria hash da nova senha
+        nova_senha_hash = hashlib.sha256(nova_senha.encode()).hexdigest()
+        
+        # Chama a API externa
+        sucesso, mensagem = api_externa_service.resetar_senha(email_telefone, nova_senha_hash)
+        
+        status_code = 200 if sucesso else 400
+        return jsonify({
+            'success': sucesso,
+            'message': mensagem
+        }), status_code
+    
+    except Exception as e:
+        current_app.logger.error(f"Erro no reset de senha: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Erro interno do servidor'
+        }), 500

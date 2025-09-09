@@ -111,8 +111,8 @@ def swagger_json():
                     "properties": {
                         "email_telefone": {
                             "type": "string",
-                            "description": "Email ou RA do usuário. Para RA aceita vários formatos: 200378-25, 200378.25, 200378 25, etc.",
-                            "example": "email@uninga.edu.br ou 200378-25"
+                            "description": "Email ou Telefone do usuário.",
+                            "example": "44984023495"
                         },
                         "senha": {
                             "type": "string",
@@ -326,7 +326,7 @@ def swagger_json():
                     }
                 }
             },
-            "/auth/reset": {
+            "/auth/reset-password": {
                 "post": {
                     "tags": ["Autenticação"],
                     "summary": "Reset de senha",

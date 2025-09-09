@@ -106,16 +106,7 @@ class ApiExternaService:
         return sucesso, resposta
     
     def resetar_senha(self, email_telefone: str, nova_senha_hash: str) -> Tuple[bool, str]:
-        """
-        Reseta a senha de um usuário na API externa
-        
-        Args:
-            email_telefone: Email ou RA do usuário
-            nova_senha_hash: Nova senha já criptografada em SHA256
-            
-        Returns:
-            Tuple[bool, str]: (sucesso, mensagem)
-        """
+    
         dados = {
             "email_telefone": email_telefone,
             "nova_senha": nova_senha_hash
@@ -123,40 +114,14 @@ class ApiExternaService:
         
         self.logger.info(f"Enviando reset de senha para API externa: email_telefone='{email_telefone}'")
         
-        sucesso, resposta = self._fazer_requisicao("/login/reset_senha", "POST", dados)
+        sucesso, resposta = self._fazer_requisicao("/api/reset-senha", "POST", dados)
         
         if not sucesso:
-            erro_msg = resposta.get("erro", "Erro ao resetar senha")
+            erro_msg = resposta.get("status", "NENHUM USUÁRIO ENCONTRADO")
             self.logger.error(f"Falha no reset de senha: {erro_msg}")
             return False, erro_msg
         
-        # Processa a resposta da API externa
-        if isinstance(resposta, dict):
-            self.logger.info(f"Resposta do reset de senha: {resposta}")
-            
-            # Se retornou NAO_ENCONTRADO, significa que o usuário não existe
-            if resposta.get("status") == "NAO_ENCONTRADO":
-                return False, "Usuário não encontrado"
-            
-            # Verifica se o reset foi bem-sucedido
-            if (resposta.get("sucesso") or 
-                resposta.get("success") or 
-                resposta.get("status") == "OK" or
-                resposta.get("status") == "SUCESSO" or
-                resposta.get("status") == "sucesso"):  # Adicionado para reconhecer 'sucesso' minúsculo
-                
-                self.logger.info(f"Reset de senha bem-sucedido para {email_telefone}")
-                return True, "Senha alterada com sucesso"
-            else:
-                # Se há uma mensagem de erro específica da API
-                mensagem_erro = resposta.get("mensagem", 
-                                           resposta.get("message", 
-                                                      resposta.get("erro", "Erro ao alterar senha")))
-                self.logger.warning(f"Falha no reset de senha - Resposta da API: {resposta}")
-                return False, mensagem_erro
-        else:
-            self.logger.error(f"Formato de resposta inválido da API externa: {type(resposta)} - {resposta}")
-            return False, "Erro interno na comunicação com a API externa"
+        return True, "Senha alterada com sucesso"
 
 
 # Instância global do serviço

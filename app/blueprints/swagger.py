@@ -265,6 +265,66 @@ def swagger_json():
                     }
                 }
             },
+            "/auth/reset-password": {
+                "post": {
+                    "tags": ["Autenticação"],
+                    "summary": "Reset de senha",
+                    "description": "Altera a senha de um usuário usando telefone/email. A nova senha é criptografada com SHA256 antes de ser enviada à API externa.",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": ["email_telefone", "nova_senha"],
+                                    "properties": {
+                                        "email_telefone": {
+                                            "type": "string",
+                                            "description": "Telefone ou email do usuário",
+                                            "example": "44984023495"
+                                        },
+                                        "nova_senha": {
+                                            "type": "string",
+                                            "description": "Nova senha do usuário",
+                                            "example": "NovaSenha123"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Senha alterada com sucesso",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "success": {"type": "boolean", "example": True},
+                                            "message": {"type": "string", "example": "Senha alterada com sucesso"}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "400": {
+                            "description": "Erro na API externa ou dados inválidos",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "success": {"type": "boolean", "example": False},
+                                            "message": {"type": "string", "example": "Erro na API externa"}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "/user/profile": {
                 "get": {
                     "tags": ["Usuário"],
